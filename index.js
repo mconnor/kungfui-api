@@ -33,8 +33,7 @@ const typeDefs = gql `
     }
 `;
 
-const movies = [
-    {
+const movies = [{
         id: 'dkdfk',
         title: "5 Deadly Venoms",
         releaseDate: "10-10-1983",
@@ -57,7 +56,9 @@ const resolvers = {
         movies: () => {
             return movies;
         },
-        movie: (obj, { id }, context, info) => {
+        movie: (obj, {
+            id
+        }, context, info) => {
             // console.log('id ' ,id)
             const foundMovie = movies.find(movie => {
                 return movie.id === id;
@@ -72,7 +73,9 @@ const server = new ApolloServer({
     resolvers
 });
 
-server.listen().then(({
+server.listen({
+    port: process.env.PORT || 4000
+}).then(({
     url
 }) => {
     console.log(`Server started at ${url}`);
