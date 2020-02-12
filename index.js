@@ -18,7 +18,7 @@ const typeDefs = gql `
 
     type Movie {
         id: ID!
-        title: String
+        title: String!
         releaseDate: String
         rating: Int
         actor: [Actor]
