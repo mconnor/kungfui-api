@@ -4,15 +4,32 @@ const {
 } = require("apollo-server");
 
 const typeDefs = gql `
-  type Movie {
-    title: String
-    releaseDate: String
-    rating: Int
-  }
+    enum Status {
+        WATCHED
+        INTERESTED
+        NOT_INTERESTED
+        UNKNOWN
+    }
 
-  type Query {
-    movies: [Movie]
-  }
+    type Actor {
+        id: ID
+        name: String
+    }
+
+    type Movie {
+        id: ID 
+        title: String
+        releaseDate: String
+        rating: Int
+        actor: [Actor]
+        status: Status
+    }
+
+    
+
+    type Query {
+        movies: [Movie]
+    }
 `;
 
 const movies = [{
