@@ -1,4 +1,16 @@
 {
+  "name": "kungfui-api",
+  "description": "2/11/2020",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "Mike Connor <mike@cloudswing.info> (https://github.com/mconnor/)",
+  "license": "ISC",
   "dependencies": {
     "apollo-server": "^2.10.0",
     "graphql": "^14.6.0"
