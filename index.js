@@ -19,6 +19,7 @@ const typeDefs = gql `
         UNKNOWN
     }
 
+    
     type Actor {
         id: ID!
         name: String!
@@ -38,8 +39,21 @@ const typeDefs = gql `
         movie(id: ID): Movie
     }
 
+    input ActorInput {
+        id: ID
+    }
+
+    input MovieInput {
+        id: ID
+        title: String
+        releaseDate: String
+        rating: Int
+        status: Status
+        actors: [ActorInput]
+    }
+
     type Mutation {
-        addMovie(title: String, releaseDate: Date, id: ID): [Movie]
+        addMovie(movie:MovieInput): [Movie]
     }
 `;
 //   end of graphql
@@ -102,15 +116,12 @@ const resolvers = {
     },
 
     Mutation:  {
-        addMovie: (obj, { id, title, releaseDate }, context)=> {
+        addMovie: (obj, { movie }, context)=> {
+            console.log(movie)
             const newMoviesList = [
                 ...movies,
                 // new movie data
-                {
-                    id,
-                    title,
-                    releaseDate
-                }
+                movie
             ];
             return newMoviesList
 
