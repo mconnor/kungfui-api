@@ -37,6 +37,10 @@ const typeDefs = gql `
         movies: [Movie]
         movie(id: ID): Movie
     }
+
+    type Mutation {
+        addMovie(title: String, releaseDate: Date, id: ID): [Movie]
+    }
 `;
 //   end of graphql
 const actors = [{
@@ -94,6 +98,22 @@ const resolvers = {
             return filteredActors;
 
             // return actors.filter(actor => actorIds.includes(actor.id));
+        }
+    },
+
+    Mutation:  {
+        addMovie: (obj, { id, title, releaseDate }, context)=> {
+            const newMoviesList = [
+                ...movies,
+                // new movie data
+                {
+                    id,
+                    title,
+                    releaseDate
+                }
+            ];
+            return newMoviesList
+
         }
     },
 
