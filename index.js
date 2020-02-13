@@ -115,18 +115,18 @@ const resolvers = {
         }
     },
 
-    Mutation:  {
-        addMovie: (obj, { movie }, context)=> {
-            console.log(movie)
-            const newMoviesList = [
-                ...movies,
-                // new movie data
-                movie
-            ];
-            return newMoviesList
-
+    Mutation: {
+        addMovie: (obj, { movie }, context) => {
+          // Do mutation and of database stuff
+          const newMoviesList = [
+            ...movies,
+            // new movie data
+            movie
+          ];
+          // Return data as expected in schema
+          return newMoviesList;
         }
-    },
+      },
 
     Date: new GraphQLScalarType({
         name: 'Date',
@@ -151,7 +151,13 @@ const server = new ApolloServer({
     resolvers,
     introspection: true,
     playground: true,
+    context: ({ req }) => {
 
+        const fakeUser = {
+            userId: 'IamAloser'
+        }
+        return { ...fakeUser }
+    }
 });
 
 server.listen({
