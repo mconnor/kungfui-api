@@ -6,13 +6,15 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "keywords": [],
   "author": "Mike Connor <mike@cloudswing.info> (https://github.com/mconnor/)",
   "license": "ISC",
   "dependencies": {
     "apollo-server": "^2.10.0",
-    "graphql": "^14.6.0"
+    "dotenv": "^8.2.0",
+    "graphql": "^14.6.0",
+    "mongoose": "^5.9.0"
   }
 }

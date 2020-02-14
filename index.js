@@ -7,9 +7,24 @@ const {
 } = require('graphql');
 const {
     Kind
-} = require('graphql/language')
+} = require('graphql/language');
+
+const dotenv = require('dotenv');
+dotenv.config();
+
+
+const mongoose = require('mongoose');
+mongoose.connect(
+    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-3lggr.mongodb.net/test?retryWrites=true&w=majority`,
+    {useNewUrlParser: true, useUnifiedTopology: true}
+);
+
+const db = mongoose.connection;
 
 const typeDefs = gql `
+
+    
+
     scalar Date
 
     enum Status {
@@ -158,6 +173,12 @@ const server = new ApolloServer({
         }
         return { ...fakeUser }
     }
+});
+
+
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+ console.log("✅ we're connected!")
 });
 
 server.listen({
