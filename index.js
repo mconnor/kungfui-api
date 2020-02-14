@@ -15,11 +15,25 @@ dotenv.config();
 
 const mongoose = require('mongoose');
 mongoose.connect(
-    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-3lggr.mongodb.net/test?retryWrites=true&w=majority`,
-    {useNewUrlParser: true, useUnifiedTopology: true}
+    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-3lggr.mongodb.net/test?retryWrites=true&w=majority`, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }
 );
 
 const db = mongoose.connection;
+
+var Schema = mongoose.Schema;
+
+var movieSchema = new Schema({
+    title: String,
+    releaseDate: Date,
+    rating: Number,
+    status: String,
+    actorIds: [String]
+});
+
+const Movie = mongoose.model('Movie', movieSchema);
 
 const typeDefs = gql `
 
@@ -103,45 +117,58 @@ const movies = [{
 
 const resolvers = {
     Query: {
-        movies: () => {
-            return movies;
+        movies: async () => {
+            try {
+                const allMovies = await Movie.find()
+                return allMovies;
+            } catch (e) {
+                console.log('e', e);
+                return []
+            }
         },
-        movie: (obj, {
-            id
-        }, context, info) => {
-            // console.log('id ' ,id)
-            const foundMovie = movies.find(movie => {
-                return movie.id === id;
-            });
-            return foundMovie;
+        movie: async (obj, { id }) => {
+            try {
+                const foundMovie = await Movie.findById(id);
+                return foundMovie;
+            } catch (e) {
+                console.log('e', e);
+                return {};
+            }
         },
     },
 
-    Movie: {
-        actors: (obj, arg, context) => {
-            // DB Call
-            const actorIds = obj.actors.map(actor => actor.id);
-            const filteredActors = actors.filter(actor => {
-                return actorIds.includes(actor.id);
-            });
-            return filteredActors;
+    // Movie: {
+    //     actors: (obj, arg, context) => {
+    //         // DB Call
+    //         const actorIds = obj.actors.map(actor => actor.id);
+    //         const filteredActors = actors.filter(actor => {
+    //             return actorIds.includes(actor.id);
+    //         });
+    //         return filteredActors;
 
-            // return actors.filter(actor => actorIds.includes(actor.id));
-        }
-    },
+    //         // return actors.filter(actor => actorIds.includes(actor.id));
+    //     }
+    // },
 
     Mutation: {
-        addMovie: (obj, { movie }, context) => {
-          // Do mutation and of database stuff
-          const newMoviesList = [
-            ...movies,
-            // new movie data
-            movie
-          ];
-          // Return data as expected in schema
-          return newMoviesList;
+       addMovie:  async (obj, { movie }, { userId }) => {
+            // Do mutation and of database stuff
+            try {
+                if (userId) {
+                    //mongo create
+                    await Movie.create({
+                        ...movie
+                    });
+                    const allMovies = Movie.find()
+                    return allMovies;
+                }
+                return movies;
+            } catch (e) {
+                console.log('e', e)
+                return []
+            }
         }
-      },
+    },
 
     Date: new GraphQLScalarType({
         name: 'Date',
