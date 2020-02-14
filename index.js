@@ -1,6 +1,7 @@
 const {
     ApolloServer,
-    gql
+    gql, 
+    PubSub,
 } = require("apollo-server");
 const {
     GraphQLScalarType
@@ -35,10 +36,8 @@ var movieSchema = new Schema({
 
 const Movie = mongoose.model('Movie', movieSchema);
 
+// gql`` parses your string into an AST
 const typeDefs = gql `
-
-    
-
     scalar Date
 
     enum Status {
@@ -48,7 +47,6 @@ const typeDefs = gql `
         UNKNOWN
     }
 
-    
     type Actor {
         id: ID!
         name: String!
@@ -68,6 +66,14 @@ const typeDefs = gql `
         movie(id: ID): Movie
     }
 
+    type Mutation {
+        addMovie(movie:MovieInput): [Movie]
+    }
+
+    type Subscription {
+        movieAdded: Movie
+    }
+
     input ActorInput {
         id: ID
     }
@@ -81,9 +87,7 @@ const typeDefs = gql `
         actors: [ActorInput]
     }
 
-    type Mutation {
-        addMovie(movie:MovieInput): [Movie]
-    }
+    
 `;
 //   end of graphql
 const actors = [{
@@ -115,7 +119,16 @@ const movies = [{
     }
 ];
 
+const pubsub = new PubSub();
+const MOVIE_ADDED = 'MOVIE_ADDED'
+
 const resolvers = {
+    Subscription: {
+        movieAdded: {
+            subscribe: () => pubsub.asyncIterator([MOVIE_ADDED])
+        }
+    },
+
     Query: {
         movies: async () => {
             try {
@@ -123,7 +136,7 @@ const resolvers = {
                 return allMovies;
             } catch (e) {
                 console.log('e', e);
-                return []
+                return [];
             }
         },
         movie: async (obj, { id }) => {
@@ -155,10 +168,12 @@ const resolvers = {
             // Do mutation and of database stuff
             try {
                 if (userId) {
+                    
                     //mongo create
-                    await Movie.create({
+                    const newMovie = await Movie.create({
                         ...movie
                     });
+                    pubsub.publish(MOVIE_ADDED, {movieAdded: newMovie})
                     const allMovies = Movie.find()
                     return allMovies;
                 }
