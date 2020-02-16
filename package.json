@@ -6,7 +6,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "Mike Connor <mike@cloudswing.info> (https://github.com/mconnor/)",
