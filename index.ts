@@ -1,7 +1,7 @@
-const {
+import {
     ApolloServer,
     gql
-} = require("apollo-server");
+}  from "apollo-server";
 
 const typeDefs = gql `
     enum Status {

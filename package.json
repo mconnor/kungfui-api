@@ -1,6 +1,18 @@
 {
+  "scripts": {
+    "start": "node index.ts"
+  },
   "dependencies": {
     "apollo-server": "^2.10.0",
     "graphql": "^14.6.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
+    "eslint": "^7.22.0",
+    "eslint-config-prettier": "^8.1.0",
+    "prettier": "^2.2.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
   }
 }
