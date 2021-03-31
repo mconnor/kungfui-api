@@ -1,6 +1,6 @@
 const {
     ApolloServer,
-    gql, 
+    gql,
     PubSub,
 } = require("apollo-server");
 const {
@@ -12,19 +12,24 @@ const {
 
 //for using .env file
 const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+
+
 dotenv.config();
 
 
-const mongoose = require('mongoose');
+// const { Schema } = mongoose;
+
+
+
 mongoose.connect(
     `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-3lggr.mongodb.net/test?retryWrites=true&w=majority`, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    }
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}
 );
 
 const db = mongoose.connection;
-
 const Schema = mongoose.Schema;
 
 const movieSchema = new Schema({
@@ -38,8 +43,10 @@ const movieSchema = new Schema({
 const Movie = mongoose.model('Movie', movieSchema);
 
 // gql`` parses your string into an AST
-const typeDefs = gql `
+const typeDefs = gql`
     scalar Date
+
+
 
     enum Status {
         WATCHED
@@ -124,16 +131,16 @@ const resolvers = {
     },
 
     Mutation: {
-       addMovie:  async (obj, { movie }, { userId }) => {
+        addMovie: async (obj, { movie }, { userId }) => {
             // Do mutation and of database stuff
             try {
                 if (userId) {
-                    
+
                     //mongo create
                     const newMovie = await Movie.create({
                         ...movie
                     });
-                    pubsub.publish(MOVIE_ADDED, {movieAdded: newMovie})
+                    pubsub.publish(MOVIE_ADDED, { movieAdded: newMovie })
                     const allMovies = Movie.find()
                     return allMovies;
                 }
