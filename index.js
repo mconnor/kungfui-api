@@ -179,14 +179,17 @@ const server = new ApolloServer({
 
 
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
- console.log("✅ we're connected!")
+db.once('open', function () {
+    console.log("✅ we're connected!" + process.env.MONGO_PASSWORD)
+
+    server.listen({
+        port: process.env.PORT || 4000
+    }).then(({
+        url
+    }) => {
+        console.log(`Server started at ${url}`);
+    });
+
+
 });
 
-server.listen({
-    port: process.env.PORT || 4000
-}).then(({
-    url
-}) => {
-    console.log(`Server started at ${url}`);
-});
