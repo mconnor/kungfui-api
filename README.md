@@ -1,3 +1,27 @@
 # GraphQL API
 
-2/11/2020
+GraphQL playground test
+
+Run a query like so
+```
+query {
+  movies {
+    title
+    reating
+  }
+}
+```
+
+run a mutation like so:
+
+```
+mutation {
+   addActor(actor:{name:"Harry", id:"949494", movies:[{title:"big love"},{title:"alien"}]}) {
+    name
+    id
+    movies {
+      title
+    }
+  }
+}
+```

@@ -40,8 +40,19 @@ const movieSchema = new Schema({
     actorIds: [String]
 });
 
-const Movie = mongoose.model('Movie', movieSchema);
 
+const actorSchema = new Schema({
+    name: String,
+    gender: String,
+    age: Number,
+    status: String,
+    movieIds: [String]
+});
+
+
+
+const Movie = mongoose.model('Movie', movieSchema);
+const Actor = mongoose.model('Actor', actorSchema);
 // gql`` parses your string into an AST
 const typeDefs = gql`
     scalar Date
@@ -58,6 +69,8 @@ const typeDefs = gql`
     type Actor {
         id: ID!
         name: String!
+        movies: [Movie]
+        gender: String
     }
 
     type Movie {
@@ -72,18 +85,32 @@ const typeDefs = gql`
     type Query {
         movies: [Movie]
         movie(id: ID): Movie
+        actors: [Actor]
+        actor(id: ID): Actor
+        
     }
 
+    
+    
     type Mutation {
         addMovie(movie:MovieInput): [Movie]
+        addActor(actor:ActorInput): [Actor]     
     }
+
+ 
 
     type Subscription {
         movieAdded: Movie
+        actorAdded: Actor
     }
 
     input ActorInput {
         id: ID
+        name: String
+        gender: String
+        age: Int
+        movies: [MovieInput]
+
     }
 
     input MovieInput {
@@ -101,11 +128,15 @@ const typeDefs = gql`
 
 const pubsub = new PubSub();
 const MOVIE_ADDED = 'MOVIE_ADDED'
+const  ACTOR_ADDED = 'ACTOR_ADDED'
 
 const resolvers = {
     Subscription: {
         movieAdded: {
             subscribe: () => pubsub.asyncIterator([MOVIE_ADDED])
+        },
+        actorAdded: {
+            subscribe: () => pubsub.asyncIterator([ACTOR_ADDED])
         }
     },
 
@@ -149,6 +180,26 @@ const resolvers = {
                 console.log('e', e)
                 return []
             }
+        },
+
+        addActor:  async (obj, { actor }, { userId }) => {
+            // Do mutation and of database stuff
+            try {
+                if (userId) {
+
+                    //mongo create
+                    const newActor = await Actor.create({
+                        ...actor
+                    });
+                    pubsub.publish(ACTOR_ADDED, { actorAdded: newActor })
+                    const allActors = Actor.find()
+                    return allActors;
+                }
+                return actors;
+            } catch (e) {
+                console.log('e', e)
+                return []
+            }
         }
     },
 
@@ -178,7 +229,7 @@ const server = new ApolloServer({
     context: ({ req }) => {
 
         const fakeUser = {
-            userId: 'IamAloser'
+            userId: 'SomeFakeUserName'
         }
         return { ...fakeUser }
     }
