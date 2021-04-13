@@ -30,7 +30,7 @@ mongoose.connect(
 );
 
 const db = mongoose.connection;
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const movieSchema = new Schema({
     title: String,
