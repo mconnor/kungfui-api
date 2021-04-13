@@ -1,3 +1,3 @@
-# GraphQL Lesson
+# GraphQL API
 
 2/11/2020
