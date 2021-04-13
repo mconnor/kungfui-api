@@ -8,7 +8,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
-  "keywords": ["api", "graphql", "apollo-server-express"],
+  "keywords": [
+    "api",
+    "graphql",
+    "apollo-server-express"
+  ],
   "repository": {
     "url": "https://github.com/mconnor/kungfui-api",
     "type": "git"
@@ -18,7 +22,7 @@
   "dependencies": {
     "apollo-server": "^2.10.0",
     "dotenv": "^8.2.0",
-    "graphql": "^14.6.0",
+    "graphql": "^15.5.0",
     "mongoose": "^5.9.0"
   }
 }
