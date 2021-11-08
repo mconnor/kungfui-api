@@ -16,7 +16,7 @@
   "author": "Mike Connor <mike@cloudswing.info> (https://github.com/mconnor/)",
   "license": "ISC",
   "dependencies": {
-    "apollo-server": "^2.10.0",
+    "apollo-server": "^2.25.3",
     "dotenv": "^8.2.0",
     "graphql": "^14.6.0",
     "mongoose": "^5.9.0"
