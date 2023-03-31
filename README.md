@@ -7,7 +7,7 @@ Run a query like so
 query {
   movies {
     title
-    reating
+    rating
   }
 }
 ```
